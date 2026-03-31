@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glassovibe — upcycled glass, reimagined</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a08;
+    --cream: #f0ebe0;
+    --olive: #7a8c5a;
+    --amber: #f59e0b;
+    --emerald-green: #10b981;
+    --sapphire-blue: #0ea5e9;
+    --metallic-gold: #f59e0b;
+    --glass: rgba(240,235,224,0.08);
+    --glass-border: rgba(240,235,224,0.15);
+    --green: #3d5a3e;
+    --sand: #d4c4a0;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom Cursor */
+  .cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--amber);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1px solid var(--amber);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease-out, width 0.3s, height 0.3s;
+  }
+  body:hover .cursor { opacity: 1; }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 48px;
+    background: linear-gradient(to bottom, rgba(10,10,8,0.95), transparent);
+    backdrop-filter: blur(2px);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 4px;
+    color: var(--cream);
+    text-decoration: none;
+    position: relative;
+  }
+  .nav-logo span { color: var(--amber); }
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+  }
+  .nav-links a {
+    color: var(--cream);
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.7;
+    transition: opacity 0.3s, color 0.3s;
+  }
+  .nav-links a:hover { opacity: 1; color: var(--amber); }
+  .nav-cta {
+    background: transparent;
+    border: 1px solid var(--emerald-green);
+    color: var(--emerald-green);
+    padding: 10px 28px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: none;
+    transition: background 0.3s, color 0.3s;
+  }
+  .nav-cta:hover { background: var(--emerald-green); color: var(--black); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 140px 60px 80px 80px;
+    position: relative;
+    z-index: 2;
+  }
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--emerald-green);
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+  .hero-tag::before {
+    content: '';
+    display: block;
+    width: 32px; height: 1px;
+    background: var(--emerald-green);
+  }
+  .hero-headline {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 8vw, 120px);
+    line-height: 0.9;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+  }
+  .hero-headline .line {
+    display: block;
+    overflow: hidden;
+  }
+  .hero-headline .line span {
+    display: block;
+    transform: translateY(100%);
+    animation: slideUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+  .hero-headline .line:nth-child(1) span { animation-delay: 0.3s; }
+  .hero-headline .line:nth-child(2) span { animation-delay: 0.45s; color: var(--amber); }
+  .hero-headline .line:nth-child(3) span { animation-delay: 0.6s; }
+  .hero-italic {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(28px, 3vw, 48px);
+    color: var(--sand);
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.9s forwards;
+  }
+  .hero-desc {
+    max-width: 380px;
+    font-size: 16px;
+    line-height: 1.8;
+    opacity: 0.65;
+    margin-bottom: 52px;
+    opacity: 0;
+    animation: fadeUp 0.8s 1.1s forwards;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    opacity: 0;
+    animation: fadeUp 0.8s 1.3s forwards;
+  }
+  .btn-primary {
+    background: var(--emerald-green);
+    color: var(--black);
+    padding: 16px 40px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: none;
+    cursor: none;
+    transition: transform 0.3s, box-shadow 0.3s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(16,185,129,0.35);
+  }
+  .btn-ghost {
+    color: var(--cream);
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    opacity: 0.6;
+    transition: opacity 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .btn-ghost:hover { opacity: 1; }
+  .btn-ghost::after {
+    content: '→';
+    transition: transform 0.3s;
+  }
+  .btn-ghost:hover::after { transform: translateX(6px); }
+
+  .hero-right {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .hero-bottles {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+  }
+  /* Decorative bottle shapes using CSS */
+  .bottle-shape {
+    position: absolute;
+    border-radius: 60% 60% 45% 45% / 50% 50% 60% 60%;
+    opacity: 0.12;
+    animation: float 6s ease-in-out infinite;
+  }
+  .bottle-shape.b1 {
+    width: 120px; height: 280px;
+    background: linear-gradient(135deg, #4a7c59, #7ab87a);
+    top: 15%; right: 25%;
+    animation-delay: 0s;
+  }
+  .bottle-shape.b2 {
+    width: 90px; height: 220px;
+    background: linear-gradient(135deg, #8c6d3f, #c8960a);
+    top: 30%; right: 12%;
+    animation-delay: -2s;
+  }
+  .bottle-shape.b3 {
+    width: 70px; height: 180px;
+    background: linear-gradient(135deg, #3a5f8a, #5a8fba);
+    top: 50%; right: 38%;
+    animation-delay: -4s;
+  }
+  .hero-glass-grid {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    opacity: 0;
+    animation: fadeIn 1s 1.5s forwards;
+  }
+  .glass-item {
+    width: 90px; height: 110px;
+    border: 1px solid var(--glass-border);
+    background: var(--glass);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--sand);
+    transition: border-color 0.3s, transform 0.3s;
+    cursor: none;
+  }
+  .glass-item:hover {
+    border-color: var(--amber);
+    transform: translateY(-4px);
+  }
+  .glass-item .icon { font-size: 28px; }
+
+  /* Noise grain overlay */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9997;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  }
+
+  /* MARQUEE */
+  .marquee-wrap {
+    overflow: hidden;
+    border-top: 1px solid var(--glass-border);
+    border-bottom: 1px solid var(--glass-border);
+    padding: 20px 0;
+    background: rgba(122,140,90,0.05);
+  }
+  .marquee-track {
+    display: flex;
+    gap: 0;
+    animation: marquee 20s linear infinite;
+    white-space: nowrap;
+  }
+  .marquee-item {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 0 40px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 3px;
+    color: var(--olive);
+  }
+  .marquee-dot {
+    width: 6px; height: 6px;
+    background: var(--amber);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* SECTION COMMON */
+  section { padding: 120px 80px; }
+  .section-tag {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--olive);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-tag::before {
+    content: '';
+    width: 28px; height: 1px;
+    background: var(--olive);
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 5vw, 80px);
+    line-height: 0.95;
+    letter-spacing: 1px;
+    margin-bottom: 24px;
+  }
+  .accent { color: var(--amber); }
+
+  /* ABOUT / PROCESS */
+  .about {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 100px;
+    align-items: center;
+  }
+  .about-visual {
+    position: relative;
+    height: 560px;
+  }
+  .about-card {
+    position: absolute;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(8px);
+    padding: 32px;
+  }
+  .about-card.c1 {
+    width: 280px;
+    top: 0; left: 0;
+    border-color: rgba(122,140,90,0.3);
+  }
+  .about-card.c2 {
+    width: 260px;
+    top: 50%; right: 0;
+    transform: translateY(-50%);
+    border-color: rgba(200,134,10,0.3);
+  }
+  .about-card.c3 {
+    width: 220px;
+    bottom: 0; left: 20%;
+    border-color: rgba(240,235,224,0.1);
+  }
+  .about-card .num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 64px;
+    color: var(--amber);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .about-card .label {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+  .about-card .desc {
+    font-size: 14px;
+    opacity: 0.7;
+    margin-top: 12px;
+    line-height: 1.7;
+  }
+  .about-text .body {
+    font-size: 17px;
+    line-height: 1.9;
+    opacity: 0.7;
+    margin-bottom: 32px;
+    max-width: 480px;
+  }
+
+  /* PROCESS STEPS */
+  .process-section { background: rgba(122,140,90,0.04); }
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin-top: 64px;
+  }
+  .step {
+    padding: 40px 32px;
+    border: 1px solid var(--glass-border);
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.4s, background 0.4s;
+    cursor: none;
+  }
+  .step::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(200,134,10,0.05), transparent);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .step:hover { border-color: rgba(200,134,10,0.4); }
+  .step:hover::before { opacity: 1; }
+  .step-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 80px;
+    color: rgba(240,235,224,0.06);
+    line-height: 1;
+    position: absolute;
+    top: 16px; right: 16px;
+  }
+  .step-icon { font-size: 36px; margin-bottom: 24px; }
+  .step-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+    color: var(--cream);
+  }
+  .step-desc {
+    font-size: 14px;
+    opacity: 0.6;
+    line-height: 1.8;
+  }
+
+  /* PRODUCTS */
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 64px;
+  }
+  .product-card {
+    position: relative;
+    overflow: hidden;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    padding: 0;
+    cursor: none;
+    group: true;
+  }
+  .product-visual {
+    height: 280px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(160deg, rgba(122,140,90,0.08), rgba(10,10,8,0.6));
+  }
+  .product-icon { font-size: 80px; opacity: 0.8; }
+  .product-image {
+    max-width: 85%;
+    max-height: 85%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 16px rgba(0,0,0,0.4));
+    transition: all 0.3s ease;
+    image-rendering: -webkit-optimize-contrast;
+  }
+  .product-card:hover .product-image {
+    transform: scale(1.05);
+    filter: drop-shadow(0 6px 24px rgba(200,134,10,0.3));
+  }
+  .product-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(10,10,8,0.8), transparent);
+  }
+  .product-info { padding: 32px; }
+  .product-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 30px;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+  .product-desc {
+    font-size: 14px;
+    opacity: 0.6;
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+  .product-tag {
+    display: inline-block;
+    background: rgba(122,140,90,0.15);
+    border: 1px solid rgba(122,140,90,0.3);
+    color: var(--olive);
+    padding: 4px 14px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .product-card:hover .product-visual { filter: brightness(1.15); }
+
+  /* B2B SECTION */
+  .b2b-section {
+    background: linear-gradient(160deg, rgba(61,90,62,0.08), rgba(10,10,8,0));
+    border-top: 1px solid var(--glass-border);
+  }
+  .b2b-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 64px;
+  }
+  .b2b-card {
+    border: 1px solid var(--glass-border);
+    padding: 40px 36px;
+    position: relative;
+    transition: border-color 0.3s, transform 0.3s;
+    cursor: none;
+  }
+  .b2b-card:hover {
+    border-color: var(--olive);
+    transform: translateY(-6px);
+  }
+  .b2b-icon { font-size: 40px; margin-bottom: 24px; display: block; }
+  .b2b-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+  }
+  .b2b-desc {
+    font-size: 14px;
+    opacity: 0.6;
+    line-height: 1.8;
+    margin-bottom: 24px;
+  }
+  .b2b-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .b2b-features li {
+    font-size: 13px;
+    opacity: 0.7;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .b2b-features li::before {
+    content: '◆';
+    color: var(--amber);
+    font-size: 8px;
+    flex-shrink: 0;
+  }
+
+  /* TESTIMONIALS */
+  .testimonials-section { overflow: hidden; }
+  .testimonials-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 64px;
+  }
+  .tabs {
+    display: flex;
+    gap: 4px;
+    margin-top: 24px;
+  }
+  .tab {
+    padding: 10px 24px;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: 1px solid var(--glass-border);
+    background: transparent;
+    color: var(--cream);
+    cursor: none;
+    transition: all 0.3s;
+    opacity: 0.5;
+  }
+  .tab.active {
+    background: var(--amber);
+    border-color: var(--amber);
+    color: var(--black);
+    opacity: 1;
+    font-weight: 500;
+  }
+  .testimonials-track {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    transition: opacity 0.3s;
+  }
+  .testimonial-card {
+    padding: 48px 40px;
+    border: 1px solid var(--glass-border);
+    position: relative;
+    background: var(--glass);
+    transition: border-color 0.3s;
+  }
+  .testimonial-card:hover { border-color: rgba(200,134,10,0.3); }
+  .quote-mark {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 80px;
+    color: var(--amber);
+    opacity: 0.3;
+    line-height: 0.8;
+    margin-bottom: 24px;
+    display: block;
+  }
+  .testimonial-text {
+    font-size: 16px;
+    line-height: 1.85;
+    opacity: 0.8;
+    margin-bottom: 36px;
+    font-style: italic;
+  }
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .author-avatar {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+  }
+  .author-name {
+    font-weight: 500;
+    font-size: 15px;
+    margin-bottom: 4px;
+  }
+  .author-role {
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--olive);
+    opacity: 0.8;
+  }
+  .stars {
+    color: var(--amber);
+    font-size: 14px;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+  }
+  .b2b-badge {
+    position: absolute;
+    top: 20px; right: 20px;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border: 1px solid rgba(122,140,90,0.4);
+    color: var(--olive);
+  }
+
+  /* IMPACT SECTION */
+  .impact-section {
+    text-align: center;
+    background: linear-gradient(180deg, transparent, rgba(122,140,90,0.06), transparent);
+  }
+  .impact-numbers {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin-top: 80px;
+  }
+  .impact-item {
+    padding: 48px 24px;
+    border: 1px solid var(--glass-border);
+  }
+  .impact-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 72px;
+    color: var(--amber);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .impact-label {
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.5;
+  }
+  .impact-sub {
+    font-size: 12px;
+    color: var(--olive);
+    margin-top: 6px;
+    opacity: 0.8;
+  }
+
+  /* CTA / COLLAB */
+  .collab-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    padding: 0;
+    margin: 0 80px 120px;
+    border: 1px solid var(--glass-border);
+  }
+  .collab-panel {
+    padding: 80px 64px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.4s;
+  }
+  .collab-panel.left {
+    background: rgba(122,140,90,0.05);
+    border-right: 1px solid var(--glass-border);
+  }
+  .collab-panel.right {
+    background: rgba(200,134,10,0.04);
+  }
+  .collab-panel:hover { background: rgba(200,134,10,0.07); }
+  .collab-eyebrow {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--olive);
+    margin-bottom: 20px;
+  }
+  .collab-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px;
+    letter-spacing: 2px;
+    line-height: 0.95;
+    margin-bottom: 24px;
+  }
+  .collab-body {
+    font-size: 15px;
+    opacity: 0.6;
+    line-height: 1.8;
+    margin-bottom: 40px;
+    max-width: 340px;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--glass-border);
+    padding: 64px 80px 40px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 64px;
+  }
+  .footer-brand .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 40px;
+    letter-spacing: 4px;
+    margin-bottom: 20px;
+    display: block;
+    color: var(--cream);
+    text-decoration: none;
+  }
+  .footer-brand .logo span { color: var(--amber); }
+  .footer-brand p {
+    font-size: 14px;
+    opacity: 0.5;
+    line-height: 1.8;
+    max-width: 260px;
+  }
+  .footer-col h4 {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--olive);
+    margin-bottom: 24px;
+  }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .footer-col ul a {
+    color: var(--cream);
+    text-decoration: none;
+    font-size: 14px;
+    opacity: 0.5;
+    transition: opacity 0.3s;
+  }
+  .footer-col ul a:hover { opacity: 1; }
+  .footer-bottom {
+    padding: 24px 80px;
+    border-top: 1px solid var(--glass-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    opacity: 0.4;
+    letter-spacing: 1px;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 0.65; transform: translateY(0); }
+  }
+  @keyframes fadeUpFull {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(3deg); }
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* Hidden testimonial sets */
+  .testi-set { display: none; }
+  .testi-set.active { display: contents; }
+
+  /* Diagonal divider */
+  .diagonal {
+    height: 80px;
+    background: linear-gradient(to bottom right, transparent 49%, rgba(122,140,90,0.04) 50%);
+  }
+</style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Glassovibe</a>
+  <ul class="nav-links">
+    <li><a href="#about">Story</a></li>
+    <li><a href="#products">Products</a></li>
+    <li><a href="#b2b">B2B</a></li>
+    <li><a href="#impact">Impact</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('collab').scrollIntoView({behavior:'smooth'})">Partner With Us</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero" style="padding:0;">
+  <div class="hero-left">
+    <div class="hero-tag">🌿 Zero Crush · 100% Upcycled · Gen Z Approved</div>
+    <h1 class="hero-headline">
+      <span class="line"><span>DEAD</span></span>
+      <span class="line"><span>BOTTLES</span></span>
+      <span class="line"><span>NEW LIFE</span></span>
+    </h1>
+    <p class="hero-italic">same glass, zero waste.</p>
+    <p class="hero-desc" style="opacity:0;animation:fadeUp 0.8s 1.1s forwards;">
+      We don't crush 'em. We don't melt 'em. We transform discarded liquor bottles into stunning handcrafted drinkware & décor — one bottle at a time.
+    </p>
+    <div class="hero-actions">
+      <a href="#products" class="btn-primary">Shop Now</a>
+      <a href="#about" class="btn-ghost">Our Process</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="bottle-shape b1"></div>
+    <div class="bottle-shape b2"></div>
+    <div class="bottle-shape b3"></div>
+    <div class="hero-glass-grid">
+      <div class="glass-item"><span class="icon">🥃</span>Tumblers</div>
+      <div class="glass-item"><span class="icon">🍶</span>Carafes</div>
+      <div class="glass-item"><span class="icon">🕯️</span>Candle Holders</div>
+      <div class="glass-item"><span class="icon">🌱</span>Vases</div>
+      <div class="glass-item"><span class="icon">🍾</span>Planters</div>
+      <div class="glass-item"><span class="icon">💡</span>Lamps</div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track" id="marquee">
+    <span class="marquee-item"><span class="marquee-dot"></span>NO CRUSHING</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>NO MELTING</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>PURE UPCYCLING</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>HANDCRAFTED</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>ZERO WASTE</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>GEN Z VIBES</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>PLANET FIRST</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>NO CRUSHING</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>NO MELTING</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>PURE UPCYCLING</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>HANDCRAFTED</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>ZERO WASTE</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>GEN Z VIBES</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>PLANET FIRST</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about" style="padding: 120px 80px;">
+  <div class="about">
+    <div class="about-visual reveal">
+      <div class="about-card c1">
+        <div class="num">0%</div>
+        <div class="label">Glass Crushed or Melted</div>
+        <div class="desc">Every bottle stays structurally whole. We cut, polish, and transform — never destroy.</div>
+      </div>
+      <div class="about-card c2">
+        <div class="num">4K+</div>
+        <div class="label">Bottles Saved</div>
+        <div class="desc">From landfills to living rooms, one rescued bottle at a time.</div>
+      </div>
+      <div class="about-card c3">
+        <div class="num">100%</div>
+        <div class="label">Handcrafted</div>
+      </div>
+    </div>
+    <div class="about-text">
+      <div class="section-tag">Our Story</div>
+      <h2 class="section-title">Glass is too <span class="accent">beautiful</span> to waste.</h2>
+      <p class="body" style="font-size:17px;line-height:1.9;opacity:0.7;margin-bottom:32px;max-width:480px;">
+We started Glassovibe with a single question: why crush glass that's already perfect? Liquor bottles are engineered to be thick, strong, and honestly gorgeous. We saw potential where others saw waste.
+      </p>
+      <p class="body" style="font-size:17px;line-height:1.9;opacity:0.7;margin-bottom:40px;max-width:480px;">
+        Our artisans use precision cutting and polishing to transform these bottles into drinking glasses, carafes, vases, candle holders, and more — keeping the soul of the bottle alive.
+      </p>
+      <a href="#products" class="btn-primary">See Our Products</a>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process-section" id="process">
+  <div class="section-tag">How It Works</div>
+  <h2 class="section-title">The <span class="accent">Glassovibe</span> method</h2>
+  <div class="steps-grid">
+    <div class="step reveal">
+      <div class="step-num">01</div>
+      <div class="step-icon">🍾</div>
+      <div class="step-title">Collect</div>
+      <div class="step-desc">We source discarded liquor & wine bottles from restaurants, bars, events and households. No bottle is too old or too dirty.</div>
+    </div>
+    <div class="step reveal reveal-delay-1">
+      <div class="step-num">02</div>
+      <div class="step-icon">✂️</div>
+      <div class="step-title">Cut & Score</div>
+      <div class="step-desc">Using precision glass-cutting tools, we score the bottle at the perfect point. No crushing. No melting. Just clean cuts.</div>
+    </div>
+    <div class="step reveal reveal-delay-2">
+      <div class="step-num">03</div>
+      <div class="step-icon">💎</div>
+      <div class="step-title">Polish</div>
+      <div class="step-desc">Every edge is hand-polished until silky smooth — completely safe for drinking, pouring, or touching. Food-grade certified.</div>
+    </div>
+    <div class="step reveal reveal-delay-3">
+      <div class="step-num">04</div>
+      <div class="step-icon">📦</div>
+      <div class="step-title">Ship With Love</div>
+      <div class="step-desc">Packed in recycled materials with a card tracing your bottle's origin — where it came from, where it's going.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section id="products" style="padding: 120px 80px;">
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:0;">
+    <div>
+      <div class="section-tag">Our Craft</div>
+      <h2 class="section-title">What we <span class="accent">make</span></h2>
+    </div>
+    <p style="font-size:14px;opacity:0.5;max-width:300px;line-height:1.8;">Every piece tells the story of a bottle reborn. Each one is one-of-a-kind.</p>
+  </div>
+  <div class="products-grid">
+    <div class="product-card reveal">
+      <div class="product-visual">
+        <img src="images/tumbler.jpeg" alt="Drinking Glasses" class="product-image" loading="lazy">
+        <div class="product-overlay"></div>
+      </div>
+      <div class="product-info">
+        <div class="product-name">Drinking Glasses</div>
+        <div class="product-desc">Hand-cut from premium whisky, gin & vodka bottles. Thick walls, smooth lips, serious character. No two are alike.</div>
+        <span class="product-tag">Most Popular</span>
+      </div>
+    </div>
+    <div class="product-card reveal reveal-delay-1">
+      <div class="product-visual" style="background:linear-gradient(160deg, rgba(200,134,10,0.1),rgba(10,10,8,0.6));">
+        <img src="images/carafe vase.jpeg" alt="Carafes & Decanters" class="product-image" loading="lazy">
+        <div class="product-overlay"></div>
+      </div>
+      <div class="product-info">
+        <div class="product-name">Carafes & Decanters</div>
+        <div class="product-desc">Full wine & champagne bottles repurposed into elegant water or juice carafes. Dining table status pieces.</div>
+        <span class="product-tag">For Hotels</span>
+      </div>
+    </div>
+    <div class="product-card reveal reveal-delay-2">
+      <div class="product-visual" style="background:linear-gradient(160deg, rgba(90,143,186,0.1),rgba(10,10,8,0.6));">
+        <img src="images/candle-holder.jpeg" alt="Candle Holders" class="product-image" loading="lazy">
+        <div class="product-overlay"></div>
+      </div>
+      <div class="product-info">
+        <div class="product-name">Candle Holders</div>
+        <div class="product-desc">Bottle bases transformed into moody, atmospheric candle vessels. Perfect for restaurant ambiance.</div>
+        <span class="product-tag">For Restaurants</span>
+      </div>
+    </div>
+    <div class="product-card reveal">
+      <div class="product-visual" style="background:linear-gradient(160deg, rgba(61,90,62,0.15),rgba(10,10,8,0.6));">
+        <img src="images/planters & vases.jpeg" alt="Planters & Vases" class="product-image" loading="lazy">
+        <div class="product-overlay"></div>
+      </div>
+      <div class="product-info">
+        <div class="product-name">Planters & Vases</div>
+        <div class="product-desc">Cut and drilled for drainage, these upcycled planters are the perfect home for succulents and herbs.</div>
+        <span class="product-tag">Home Décor</span>
+      </div>
+    </div>
+    <div class="product-card reveal reveal-delay-1">
+      <div class="product-visual" style="background:linear-gradient(160deg, rgba(140,109,63,0.15),rgba(10,10,8,0.6));">
+        <img src="images/bottle lamps.jpeg" alt="Bottle Lamps" class="product-image" loading="lazy">
+        <div class="product-overlay"></div>
+      </div>
+      <div class="product-info">
+        <div class="product-name">Bottle Lamps</div>
+        <div class="product-desc">Full bottles wired as pendant or table lamps. A statement piece that literally glows with history.</div>
+        <span class="product-tag">New Arrival</span>
+      </div>
+    </div>
+    <div class="product-card reveal reveal-delay-2">
+      <div class="product-visual" style="background:linear-gradient(160deg, rgba(122,140,90,0.15),rgba(10,10,8,0.6));">
+        <img src="images/Custom B2B sets.jpeg" alt="Bottle Lamps" class="product-image" loading="lazy">
+        <div class="product-overlay"></div>
+      </div>
+      <div class="product-info">
+        <div class="product-name">Custom B2B Sets</div>
+        <div class="product-desc">Branded glassware sets for hotels, restaurants & events. Your logo etched on your own bottles. Full custom runs.</div>
+        <span class="product-tag">B2B Special</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- B2B SECTION -->
+<section class="b2b-section" id="b2b">
+  <div class="section-tag">Business Partnerships</div>
+  <h2 class="section-title">Built for <span class="accent">business</span></h2>
+  <p style="font-size:16px;opacity:0.6;max-width:560px;line-height:1.8;margin-top:16px;">
+    Hotels, restaurants, bars, and event spaces — we turn your own empty bottles into your brand story. A sustainability narrative your guests will actually notice.
+  </p>
+  <div class="b2b-grid">
+    <div class="b2b-card reveal">
+      <span class="b2b-icon">🏨</span>
+      <div class="b2b-title">Hotels & Resorts</div>
+      <div class="b2b-desc">Turn your hotel bar's empty bottles into branded room accessories and dining glassware. Sustainability guests can see and use.</div>
+      <ul class="b2b-features">
+        <li>Custom-branded carafe sets for rooms</li>
+        <li>Lobby décor from signature bottles</li>
+        <li>Eco certification support</li>
+        <li>Bulk pricing & replenishment plans</li>
+        <li>Origin card storytelling for each piece</li>
+      </ul>
+    </div>
+    <div class="b2b-card reveal reveal-delay-1">
+      <span class="b2b-icon">🍽️</span>
+      <div class="b2b-title">Restaurants & Bars</div>
+      <div class="b2b-desc">Your empty wine and spirits bottles become your most talked-about table accessory. Build a circular economy inside your own four walls.</div>
+      <ul class="b2b-features">
+        <li>Drinking glasses from your own bottles</li>
+        <li>Candle sets for table ambiance</li>
+        <li>Water carafes & condiment holders</li>
+        <li>Zero-waste storytelling for menus</li>
+        <li>Monthly collection & creation cycle</li>
+      </ul>
+    </div>
+    <div class="b2b-card reveal reveal-delay-2">
+      <span class="b2b-icon">🏢</span>
+      <div class="b2b-title">Corporate & Events</div>
+      <div class="b2b-desc">Gifting, launches, and brand events that actually mean something. Upcycled glassware with your branding as sustainable corporate gifts.</div>
+      <ul class="b2b-features">
+        <li>Custom etched logo sets</li>
+        <li>Event launch collections</li>
+        <li>Corporate gifting at scale</li>
+        <li>CSR partnership documentation</li>
+        <li>Low MOQ — start small, scale fast</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials-section" id="testimonials" style="padding: 120px 80px;">
+  <div class="testimonials-header">
+    <div>
+      <div class="section-tag">What They're Saying</div>
+      <h2 class="section-title">Real talk, <span class="accent">no filter.</span></h2>
+    </div>
+    <div>
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('consumers', this)">Customers</button>
+        <button class="tab" onclick="switchTab('b2b', this)">B2B Partners</button>
+        <button class="tab" onclick="switchTab('hotels', this)">Hotels & Restaurants</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="testimonials-track" id="testi-consumers">
+    <div class="testimonial-card reveal">
+      <span class="stars">★★★★★</span>
+      <span class="quote-mark">"</span>
+Glassovibe understood the assignment fr.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">👤</div>
+        <div>
+          <div class="author-name">Aryan M.</div>
+          <div class="author-role">Customer · Mumbai</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card reveal reveal-delay-1">
+      <span class="stars">★★★★★</span>
+      <span class="quote-mark">"</span>
+      <p class="testimonial-text">ordered the set of 4 tumblers for my apartment and honestly? they're better than anything I've seen at a homewares store. the glass is SO thick and it feels premium. lowkey obsessed.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">👤</div>
+        <div>
+          <div class="author-name">Simran K.</div>
+          <div class="author-role">Customer · Delhi</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card reveal reveal-delay-2">
+      <span class="stars">★★★★★</span>
+      <span class="quote-mark">"</span>
+      <p class="testimonial-text">this is sustainability that actually looks good? no sad recycled vibes, just genuinely beautiful stuff. i got the candle holder and vase combo and my whole room is a vibe now.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">👤</div>
+        <div>
+          <div class="author-name">Priya R.</div>
+          <div class="author-role">Customer · Bangalore</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="testimonials-track" id="testi-b2b" style="display:none;">
+    <div class="testimonial-card reveal">
+      <div class="b2b-badge">B2B Partner</div>
+      <span class="stars">★★★★★</span>
+      <span class="quote-mark">"</span>
+We approached Glassovibe for our brand launch gifting. 200 custom-etched glasses from our own whisky bottles, delivered in 3 weeks. The response from partners was extraordinary. This is what a purposeful brand looks like.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">🏢</div>
+        <div>
+          <div class="author-name">Rohan Mehta</div>
+          <div class="author-role">Founder · Dram & Co. Spirits</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card reveal reveal-delay-1">
+      <div class="b2b-badge">B2B Partner</div>
+      <span class="stars">★★★★★</span>
+      <span class="quote-mark">"</span>
+      <p class="testimonial-text">As a design studio focused on sustainable packaging, we've partnered with ren3we on three client projects now. Their quality is consistent, the turnaround is tight, and they understand brand storytelling better than most agencies.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">🏢</div>
+        <div>
+          <div class="author-name">Kavya Nair</div>
+          <div class="author-role">Creative Director · Loop Studio</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card reveal reveal-delay-2">
+      <div class="b2b-badge">B2B Partner</div>
+      <span class="stars">★★★★★</span>
+      <span class="quote-mark">"</span>
+      <p class="testimonial-text">We needed unique corporate diwali gifts that aligned with our zero-waste values. ren3we delivered 500 units of branded glasses from our own event empties. Our ESG team literally cried. I'm not joking.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">🏢</div>
+        <div>
+          <div class="author-name">Siddharth V.</div>
+          <div class="author-role">Sustainability Head · TechBridge India</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="testimonials-track" id="testi-hotels" style="display:none;">
+    <div class="testimonial-card reveal">
+      <div class="b2b-badge">Hotel Partner</div>
+      <span class="stars">★★★★★</span>
+      <span class="quote-mark">"</span>
+      <p class="testimonial-text">We now serve drinking water in ren3we carafes at all our restaurants. Guests constantly ask about them — it opens a sustainability conversation every single dinner. It's the best brand touchpoint we've ever introduced.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">🏨</div>
+        <div>
+          <div class="author-name">Aditi Sharma</div>
+          <div class="author-role">F&B Director · The Willow Resort</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card reveal reveal-delay-1">
+      <div class="b2b-badge">Restaurant Partner</div>
+      <span class="stars">★★★★★</span>
+      <span class="quote-mark">"</span>
+      <p class="testimonial-text">We were throwing away 200+ bottles every month. Now ren3we collects them and sends back our own glasses. Our customers LOVE it. It's on every Instagram post of our restaurant. Free marketing, circular economy, zero cost.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">🍽️</div>
+        <div>
+          <div class="author-name">Chef Ishan Malik</div>
+          <div class="author-role">Owner · Ember & Vine</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card reveal reveal-delay-2">
+      <div class="b2b-badge">Bar Partner</div>
+      <span class="stars">★★★★★</span>
+      <span class="quote-mark">"</span>
+      <p class="testimonial-text">As a craft cocktail bar, provenance is everything to us. The fact that our signature cocktails now come in glasses made from the very bottles we poured from last season — that's a story our guests pay a premium for. Honestly genius.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">🍸</div>
+        <div>
+          <div class="author-name">Zara & Nikhil</div>
+          <div class="author-role">Co-owners · Folklore Bar, Pune</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IMPACT -->
+<section class="impact-section" id="impact">
+  <div class="section-tag" style="justify-content:center;">Our Planet, Our Numbers</div>
+  <h2 class="section-title">The <span class="accent">impact</span> so far</h2>
+  <div class="impact-numbers">
+    <div class="impact-item reveal">
+      <div class="impact-num">4,200</div>
+      <div class="impact-label">Bottles Upcycled</div>
+      <div class="impact-sub">and counting →</div>
+    </div>
+    <div class="impact-item reveal reveal-delay-1">
+      <div class="impact-num">12T</div>
+      <div class="impact-label">CO₂ Not Released</div>
+      <div class="impact-sub">vs. recycling alternative</div>
+    </div>
+    <div class="impact-item reveal reveal-delay-2">
+      <div class="impact-num">380+</div>
+      <div class="impact-label">B2B Clients</div>
+      <div class="impact-sub">hotels, restaurants, brands</div>
+    </div>
+    <div class="impact-item reveal reveal-delay-3">
+      <div class="impact-num">0%</div>
+      <div class="impact-label">Glass Crushed</div>
+      <div class="impact-sub">ever. not once. never.</div>
+    </div>
+  </div>
+</section>
+
+<!-- COLLAB CTA -->
+<div class="collab-section" id="collab">
+  <div class="collab-panel left">
+    <div class="collab-eyebrow">For Individuals</div>
+    <div class="collab-title">Shop the<br><span class="accent">Collection</span></div>
+    <p class="collab-body">Handcrafted glasses, carafes, candle holders and more. Each one unique, each one conscious. Ships across India.</p>
+    <a href="#products" class="btn-primary">Browse Shop</a>
+  </div>
+  <div class="collab-panel right">
+    <div class="collab-eyebrow">For Businesses</div>
+    <div class="collab-title">Partner<br><span class="accent">With Us</span></div>
+    <p class="collab-body">Hotels, restaurants, brands — let's build something circular together. Custom collections, brand storytelling, scale partnerships.</p>
+    <a href="mailto:hello@ren3we.in" class="btn-primary" style="background:var(--cream);color:var(--black);">Get In Touch</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <a href="#" class="logo">Glassovibe</a>
+    <p>Upcycled glass from discarded liquor bottles — no crushing, no melting, just transformation. Based in India, shipping love everywhere.</p>
+  </div>
+  <div class="footer-col">
+    <h4>Products</h4>
+    <ul>
+      <li><a href="#">Drinking Glasses</a></li>
+      <li><a href="#">Carafes</a></li>
+      <li><a href="#">Candle Holders</a></li>
+      <li><a href="#">Vases & Planters</a></li>
+      <li><a href="#">Bottle Lamps</a></li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h4>For Business</h4>
+    <ul>
+      <li><a href="#">Hotels & Resorts</a></li>
+      <li><a href="#">Restaurants & Bars</a></li>
+      <li><a href="#">Corporate Gifting</a></li>
+      <li><a href="#">Custom Branding</a></li>
+      <li><a href="#">B2B Pricing</a></li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h4>Company</h4>
+    <ul>
+      <li><a href="#">Our Story</a></li>
+      <li><a href="#process">Process</a></li>
+      <li><a href="#impact">Impact</a></li>
+      <li><a href="https://www.instagram.com/glassovibe/" target="_blank">Instagram</a></li>
+      <li><a href="mailto:hellorenwe@gmail.com">Contact</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="footer-bottom">
+<span>© 2026 Glassovibe. All rights reserved.</span>
+  <span>made with 🌿 and a whole lot of upcycled glass</span>
+</div>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+    setTimeout(() => {
+      ring.style.left = e.clientX + 'px';
+      ring.style.top = e.clientY + 'px';
+    }, 80);
+  });
+  document.querySelectorAll('a, button, .product-card, .b2b-card, .step, .testimonial-card').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width = '20px';
+      cursor.style.height = '20px';
+      ring.style.width = '56px';
+      ring.style.height = '56px';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width = '12px';
+      cursor.style.height = '12px';
+      ring.style.width = '36px';
+      ring.style.height = '36px';
+    });
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Testimonial tabs
+  function switchTab(type, btn) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    const sets = ['consumers', 'b2b', 'hotels'];
+    sets.forEach(s => {
+      const el = document.getElementById('testi-' + s);
+      if (el) el.style.display = s === type ? 'grid' : 'none';
+    });
+  }
+</script>
+</body>
+</html>
