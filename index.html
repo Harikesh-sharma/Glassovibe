@@ -884,6 +884,81 @@
     height: 80px;
     background: linear-gradient(to bottom right, transparent 49%, rgba(122,140,90,0.04) 50%);
   }
+
+  /* WhatsApp Floating Icon */
+  .whatsapp-float {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #25D366, #128C7E);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 32px rgba(37, 211, 102, 0.4), 0 4px 16px rgba(0,0,0,0.3);
+    z-index: 10000;
+    cursor: none;
+    transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity: 0;
+    transform: scale(0.8) translateY(20px);
+    animation: whatsappEntrance 0.6s 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+  .whatsapp-float:hover {
+    transform: scale(1.1) !important;
+    box-shadow: 0 12px 48px rgba(37, 211, 102, 0.6), 0 0 0 8px rgba(37, 211, 102, 0.2);
+    background: linear-gradient(135deg, #25D366, #20ba5a);
+  }
+  .whatsapp-float .icon {
+    width: 28px;
+    height: 28px;
+    fill: white;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  }
+  .whatsapp-float .badge {
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    background: var(--amber);
+    color: var(--black);
+    font-size: 10px;
+    font-weight: 500;
+    padding: 4px 8px;
+    border-radius: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+  }
+  @keyframes whatsappEntrance {
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+  @keyframes whatsappPulse {
+    0% { box-shadow: 0 8px 32px rgba(37, 211, 102, 0.4); }
+    50% { box-shadow: 0 0 0 12px rgba(37, 211, 102, 0.2); }
+    100% { box-shadow: 0 8px 32px rgba(37, 211, 102, 0.4); }
+  }
+  .whatsapp-float.pulse {
+    animation: whatsappPulse 2s infinite;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .whatsapp-float {
+      bottom: 20px;
+      right: 20px;
+      width: 56px;
+      height: 56px;
+    }
+    .whatsapp-float .icon {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
 </style>
 </head>
 <body>
@@ -1372,11 +1447,22 @@ We approached Glassovibe for our brand launch gifting. 200 custom-etched glasses
 <div class="footer-bottom">
 <span>© 2026 Glassovibe. All rights reserved.</span>
   <span>made with 🌿 and a whole lot of upcycled glass</span>
-</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WhatsApp Floating Icon -->
+    <a href="https://wa.me/919541354578?text=Hi%21%20Glassovibe%2C%20interested%20in%20Your%20glass%20collection" class="whatsapp-float" target="_blank" rel="noopener">
+      <svg class="icon" viewBox="0 0 24 24">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
+      </svg>
+      <span class="badge">Chat</span>
+    </a>
 
 <script>
   // Custom cursor
   const cursor = document.getElementById('cursor');
+
   const ring = document.getElementById('cursorRing');
   document.addEventListener('mousemove', e => {
     cursor.style.left = e.clientX + 'px';
@@ -1423,6 +1509,38 @@ We approached Glassovibe for our brand launch gifting. 200 custom-etched glasses
       if (el) el.style.display = s === type ? 'grid' : 'none';
     });
   }
+
+  // WhatsApp icon interactions
+  document.addEventListener('DOMContentLoaded', () => {
+    const waIcon = document.querySelector('.whatsapp-float');
+    if (waIcon) {
+      // Custom cursor for WA
+      waIcon.addEventListener('mouseenter', () => {
+        const cursor = document.getElementById('cursor');
+        cursor.style.width = '20px';
+        cursor.style.height = '20px';
+        cursor.style.background = '#25D366';
+        const ring = document.getElementById('cursorRing');
+        ring.style.width = '56px';
+        ring.style.height = '56px';
+      });
+      waIcon.addEventListener('mouseleave', () => {
+        const cursor = document.getElementById('cursor');
+        cursor.style.width = '12px';
+        cursor.style.height = '12px';
+        cursor.style.background = 'var(--amber)';
+        const ring = document.getElementById('cursorRing');
+        ring.style.width = '36px';
+        ring.style.height = '36px';
+      });
+
+      // Pulse animation after load
+      setTimeout(() => {
+        waIcon.classList.add('pulse');
+      }, 2000);
+    }
+  });
+
 </script>
 </body>
 </html>
